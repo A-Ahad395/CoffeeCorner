@@ -114,27 +114,16 @@ class CartActivity : AppCompatActivity() {
 
         discount = when (code) {
 
-            "COFFEE10" -> subTotal * 0.10
-            "WELCOME15" -> subTotal * 0.15
-            "RAHAD20" -> subTotal * 0.20
-            "LATTE25" -> subTotal * 0.25
-            "MOCHA30" -> subTotal * 0.30
-            "ESPRESSO5" -> subTotal * 0.05
-            "CAPPUCCINO12" -> subTotal * 0.12
-            "BEANS18" -> subTotal * 0.18
-            "HOTBREW22" -> subTotal * 0.22
-            "COLDCOFFEE14" -> subTotal * 0.14
-            "SUMMER20" -> subTotal * 0.20
-            "WINTER25" -> subTotal * 0.25
-            "NEWUSER30" -> subTotal * 0.30
-            "FIRSTORDER01" -> subTotal * 0.35
-            "FREESHIP10" -> subTotal * 0.10
-            "DARKROAST15" -> subTotal * 0.15
-            "MILKFOAM8" -> subTotal * 0.08
-            "AFFOGATO16" -> subTotal * 0.16
-            "COFFEELOVER28" -> subTotal * 0.28
-            "CAFE50" -> subTotal * 0.50
-
+            "C10" -> subTotal * 0.10
+            "C15" -> subTotal * 0.15
+            "C20" -> subTotal * 0.20
+            "C25" -> subTotal * 0.25
+            "C30" -> subTotal * 0.30
+            "C35" -> subTotal * 0.35
+            "C40" -> subTotal * 0.40
+            "C11" -> subTotal * 0.11
+            "C12" -> subTotal * 0.12
+            "C13" -> subTotal * 0.13
             else -> 0.0
         }
         if (discount > 0) {

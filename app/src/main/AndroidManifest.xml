@@ -14,6 +14,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CoffeeCorner">
         <activity
+            android:name=".Activity.ProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.RegisterActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activity.MyOrderActivity"
             android:exported="false" />
         <activity

@@ -45,6 +45,9 @@ class MainActivity : AppCompatActivity() {
                 Intent(this, CartActivity::class.java)
             )
         }
+        binding.profileBtn.setOnClickListener {
+            startActivity(Intent(this, ProfileActivity::class.java))
+        }
 
         binding.favBtn.setOnClickListener {
 
