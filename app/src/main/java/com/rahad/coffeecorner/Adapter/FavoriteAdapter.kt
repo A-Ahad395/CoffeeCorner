@@ -10,6 +10,7 @@ import com.rahad.coffeecorner.Helper.FavoriteManager
 import com.rahad.coffeecorner.databinding.ViewholderCartBinding
 import android.widget.Toast
 import com.rahad.coffeecorner.Helper.ManagmentCart
+import android.graphics.Typeface
 
 class FavoriteAdapter(
     private val items: ArrayList<ItemsModel>
@@ -33,6 +34,7 @@ class FavoriteAdapter(
         holder.binding.titleTxt.text = item.title
         holder.binding.feeEachItem.text = "TK-${item.price}"
         holder.binding.totalEachItem.text = "Add Cart"
+        holder.binding.totalEachItem.typeface = Typeface.SERIF
 
         holder.binding.numberItemTxt.visibility = View.GONE
         holder.binding.plusEachItem.visibility = View.GONE

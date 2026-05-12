@@ -9,6 +9,8 @@ import com.rahad.coffeecorner.databinding.ActivityDetailBinding
 import com.rahad.coffeecorner.R
 import android.widget.Toast
 import com.rahad.coffeecorner.Helper.FavoriteManager
+import android.content.Intent
+import android.widget.Button
 
 class DetailActivity : AppCompatActivity() {
 
@@ -19,9 +21,10 @@ class DetailActivity : AppCompatActivity() {
     private var sizeMultiplier = 1.0
     private var basePrice = 0.0
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        val orderNowBtn = findViewById<Button>(R.id.orderNowBtn)
         binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -30,6 +33,7 @@ class DetailActivity : AppCompatActivity() {
         bundle()
         initSizeList()
     }
+
     private fun initSizeList() {
         binding.apply {
 
@@ -108,6 +112,16 @@ class DetailActivity : AppCompatActivity() {
             favBtn.setOnClickListener {
                 FavoriteManager.addFavorite(this@DetailActivity, item)
                 Toast.makeText(this@DetailActivity, "Added to Favorite", Toast.LENGTH_SHORT).show()
+            }
+            orderNowBtn.setOnClickListener {
+
+                item.numberInCart = numberOrder
+
+                managementCart.insertItems(item)
+
+                startActivity(
+                    Intent(this@DetailActivity, CartActivity::class.java)
+                )
             }
 
             // add to cart

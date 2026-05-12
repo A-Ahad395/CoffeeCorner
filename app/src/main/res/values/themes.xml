@@ -1,14 +1,20 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <style name="Base.Theme.CoffeeCorner" parent="Theme.Material3.DayNight.NoActionBar">
+
+    <style name="Base.Theme.CoffeeCorner"
+        parent="Theme.Material3.DayNight.NoActionBar">
     </style>
-    <style name="Theme.CoffeeCorner" parent="Base.Theme.CoffeeCorner" />
+
+    <style name="Theme.CoffeeCorner"
+        parent="Base.Theme.CoffeeCorner" />
+
     <style name="CircleImageView">
         <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">15dp</item>
-
+        <item name="cornerSize">25dp</item>
     </style>
+
     <style name="circleImage">
         <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">999dp</item>
+        <item name="cornerSize">50%</item>
     </style>
+
 </resources>

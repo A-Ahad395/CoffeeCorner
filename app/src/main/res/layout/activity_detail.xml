@@ -72,7 +72,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="-50dp"
+                android:layout_marginTop="-90dp"
                 android:background="@drawable/x_corner_bg"
                 android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -115,8 +115,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:text="Coffe Size"
                     android:fontFamily="serif-monospace"
+                    android:text="Coffe Size"
                     android:textColor="@color/darkBrown"
                     android:textSize="19sp"
                     android:textStyle="bold" />
@@ -146,11 +146,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="40dp"
                         android:layout_weight="1"
+                        android:fontFamily="serif-monospace"
                         android:gravity="center"
                         android:text="Medium"
-                        android:textSize="18sp"
-                        android:fontFamily="serif-monospace"
                         android:textColor="@color/darkBrown"
+                        android:textSize="18sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -158,11 +158,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="40dp"
                         android:layout_weight="1"
+                        android:fontFamily="serif-monospace"
                         android:gravity="center"
                         android:text="Large"
-                        android:textSize="18sp"
-                        android:fontFamily="serif-monospace"
                         android:textColor="@color/darkBrown"
+                        android:textSize="18sp"
                         android:textStyle="bold" />
 
                 </LinearLayout>
@@ -177,8 +177,8 @@
                         android:id="@+id/textView12"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="serif-monospace"
                         android:layout_gravity="center_vertical"
+                        android:fontFamily="serif-monospace"
                         android:text="Quantity :"
                         android:textColor="@color/darkBrown"
                         android:textSize="19sp"
@@ -252,8 +252,8 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="16dp"
                     android:layout_marginStart="16dp"
-                    android:text="Description"
                     android:fontFamily="serif-monospace"
+                    android:text="Description"
                     android:textColor="@color/darkBrown"
                     android:textSize="19sp"
                     android:textStyle="bold" />
@@ -269,9 +269,10 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="40dp"
                     android:layout_marginHorizontal="16dp"
-                    android:layout_marginVertical="32dp"
+                    android:layout_marginTop="32dp"
+                    android:layout_marginBottom="8dp"
                     android:background="@drawable/brown_full_corner_bg">
 
                     <TextView
@@ -279,10 +280,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="32dp"
+                        android:fontFamily="serif-monospace"
                         android:text="Add to Cart"
                         android:textColor="@color/white"
                         android:textSize="18sp"
-                        android:fontFamily="serif-monospace"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -293,8 +294,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="32dp"
-                        android:text="Tk0"
                         android:fontFamily="serif-monospace"
+                        android:text="Tk0"
                         android:textColor="@color/white"
                         android:textSize="18sp"
                         android:textStyle="bold"
@@ -314,6 +315,17 @@
                         app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
+                <Button
+                    android:id="@+id/orderNowBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginBottom="20dp"
+                    android:backgroundTint="#220C01"
+                    android:text="Order Now"
+                    android:textColor="#E7DBDB"
+                    android:textStyle="bold" />
             </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
