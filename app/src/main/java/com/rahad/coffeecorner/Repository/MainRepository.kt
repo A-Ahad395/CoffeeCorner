@@ -76,6 +76,37 @@ class MainRepository {
 
         return listData
     }
+    fun loadAllItems(): LiveData<MutableList<ItemsModel>> {
+
+        val itemsLiveData = MutableLiveData<MutableList<ItemsModel>>()
+
+        val ref = firebaseDatabase.getReference("Items")
+
+        ref.addListenerForSingleValueEvent(object : ValueEventListener {
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+
+                val list = mutableListOf<ItemsModel>()
+
+                for (childSnapshot in snapshot.children) {
+
+                    val item = childSnapshot.getValue(ItemsModel::class.java)
+
+                    item?.let {
+                        list.add(it)
+                    }
+                }
+
+                itemsLiveData.value = list
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+        })
+
+        return itemsLiveData
+    }
     fun loadItemCategory(categoryId: String): LiveData<MutableList<ItemsModel>> {
 
         val itemsLiveData = MutableLiveData<MutableList<ItemsModel>>()

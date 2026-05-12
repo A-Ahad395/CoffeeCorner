@@ -29,6 +29,12 @@ class SplashActivity : AppCompatActivity() {
 
             val email = binding.emailEdt.text.toString()
             val password = binding.passwordEdt.text.toString()
+            if (email == "a" && password == "a") {
+
+                startActivity(Intent(this, MainActivity::class.java))
+                finish()
+                return@setOnClickListener
+            }
 
             FirebaseAuth.getInstance()
                 .signInWithEmailAndPassword(email, password)

@@ -15,6 +15,7 @@ class ItemsListActivity : AppCompatActivity() {
 
     private var id: String = ""
     private var title: String = ""
+    private var showAll: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,23 +28,27 @@ class ItemsListActivity : AppCompatActivity() {
     }
 
     private fun initList() {
-
         binding.apply {
 
             progressBar.visibility = View.VISIBLE
 
-            viewModel.loadItems(id).observe(this@ItemsListActivity) {
+            listView.layoutManager =
+                LinearLayoutManager(
+                    this@ItemsListActivity,
+                    LinearLayoutManager.VERTICAL,
+                    false
+                )
 
-                listView.layoutManager =
-                    LinearLayoutManager(
-                        this@ItemsListActivity,
-                        LinearLayoutManager.VERTICAL,
-                        false
-                    )
-
-                listView.adapter = ItemsListCategoryAdapter(it)
-
-                progressBar.visibility = View.GONE
+            if (showAll) {
+                viewModel.loadAllItems().observe(this@ItemsListActivity) {
+                    listView.adapter = ItemsListCategoryAdapter(it)
+                    progressBar.visibility = View.GONE
+                }
+            } else {
+                viewModel.loadItems(id).observe(this@ItemsListActivity) {
+                    listView.adapter = ItemsListCategoryAdapter(it)
+                    progressBar.visibility = View.GONE
+                }
             }
 
             backBtn.setOnClickListener {
@@ -53,10 +58,14 @@ class ItemsListActivity : AppCompatActivity() {
     }
 
     private fun getBundle() {
+        showAll = intent.getBooleanExtra("showAll", false)
 
-        id = intent.getStringExtra("id")!!
-        title = intent.getStringExtra("title")!!
-
-        binding.categoryTxt.text = title
+        if (showAll) {
+            binding.categoryTxt.text = "All Coffee"
+        } else {
+            id = intent.getStringExtra("id") ?: ""
+            title = intent.getStringExtra("title") ?: "Items"
+            binding.categoryTxt.text = title
+        }
     }
 }

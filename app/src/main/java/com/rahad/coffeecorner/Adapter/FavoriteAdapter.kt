@@ -11,7 +11,8 @@ import com.rahad.coffeecorner.databinding.ViewholderCartBinding
 import android.widget.Toast
 import com.rahad.coffeecorner.Helper.ManagmentCart
 import android.graphics.Typeface
-
+import android.content.Intent
+import com.rahad.coffeecorner.Activity.DetailActivity
 class FavoriteAdapter(
     private val items: ArrayList<ItemsModel>
 ) : RecyclerView.Adapter<FavoriteAdapter.ViewHolder>() {
@@ -33,8 +34,9 @@ class FavoriteAdapter(
 
         holder.binding.titleTxt.text = item.title
         holder.binding.feeEachItem.text = "TK-${item.price}"
-        holder.binding.totalEachItem.text = "Add Cart"
-        holder.binding.totalEachItem.typeface = Typeface.SERIF
+        holder.binding.totalEachItem.text = "ADD TO CART"
+        holder.binding.totalEachItem.setTypeface(Typeface.SERIF, Typeface.BOLD)
+        holder.binding.totalEachItem.textSize = 12f
 
         holder.binding.numberItemTxt.visibility = View.GONE
         holder.binding.plusEachItem.visibility = View.GONE
@@ -49,6 +51,13 @@ class FavoriteAdapter(
                 Toast.LENGTH_SHORT
             ).show()
         }
+        holder.itemView.setOnClickListener {
+
+            val intent = Intent(holder.itemView.context, DetailActivity::class.java)
+            intent.putExtra("object", item)
+            holder.itemView.context.startActivity(intent)
+        }
+
 
         if (item.picUrl.isNotEmpty()) {
             Glide.with(holder.itemView.context)

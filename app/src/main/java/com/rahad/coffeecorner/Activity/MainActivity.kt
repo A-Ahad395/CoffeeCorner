@@ -24,12 +24,22 @@ class MainActivity : AppCompatActivity() {
     private var popularList = mutableListOf<ItemsModel>()
     private val viewModel = MainViewModel()
 
+    private var allItemsList = mutableListOf<ItemsModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         enableEdgeToEdge()
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        binding.seeAllTxt.setOnClickListener {
+            val intent = Intent(this, ItemsListActivity::class.java)
+            intent.putExtra("showAll", true)
+            startActivity(intent)
+        }
+
         initBanner()
         initCategory()
         initPopular()
@@ -106,7 +116,9 @@ class MainActivity : AppCompatActivity() {
             binding.progressBarPopular.visibility = View.GONE
         }
 
-        viewModel.loadPopular()
+        viewModel.loadAllItems().observe(this) { list ->
+            allItemsList = list.toMutableList()
+        }
     }
     private fun initSearch() {
 
@@ -127,16 +139,19 @@ class MainActivity : AppCompatActivity() {
                 count: Int
             ) {
 
-                val query = s.toString().lowercase()
+                val query = s.toString().lowercase().trim()
 
-                val filteredList = popularList.filter {
+                if (query.isEmpty()) {
+                    binding.recyclerViewPopular.adapter =
+                        PopularAdapter(popularList)
+                } else {
+                    val filteredList = allItemsList.filter {
+                        it.title.lowercase().contains(query)
+                    }.toMutableList()
 
-                    it.title.lowercase().contains(query)
-
-                }.toMutableList()
-
-                binding.recyclerViewPopular.adapter =
-                    PopularAdapter(filteredList)
+                    binding.recyclerViewPopular.adapter =
+                        PopularAdapter(filteredList)
+                }
             }
 
             override fun afterTextChanged(s: Editable?) {
