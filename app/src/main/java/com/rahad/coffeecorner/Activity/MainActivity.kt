@@ -55,6 +55,7 @@ class MainActivity : AppCompatActivity() {
                 Intent(this, CartActivity::class.java)
             )
         }
+
         binding.profileBtn.setOnClickListener {
             startActivity(Intent(this, ProfileActivity::class.java))
         }
@@ -65,9 +66,11 @@ class MainActivity : AppCompatActivity() {
                 Intent(this, FavoriteActivity::class.java)
             )
         }
+
         binding.myOrderBtn.setOnClickListener {
             startActivity(Intent(this, MyOrderActivity::class.java))
         }
+
         binding.explorerBtn.setOnClickListener {
 
             startActivity(
@@ -77,30 +80,39 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initBanner() {
+
         binding.progressBarBanner.visibility = View.VISIBLE
 
         viewModel.loadBanner().observe(this) {
+
             if (it.isNotEmpty()) {
+
                 Glide.with(this)
                     .load(it[0].url)
                     .into(binding.banner)
-
-                binding.progressBarBanner.visibility = View.GONE
             }
+
+            binding.progressBarBanner.visibility = View.GONE
         }
     }
+
     private fun initCategory() {
+
         binding.progressBarCategory.visibility = View.VISIBLE
 
         binding.recyclerViewCat.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
         viewModel.loadCategory().observe(this) {
+
             binding.recyclerViewCat.adapter = CategoryAdapter(it)
+
             binding.progressBarCategory.visibility = View.GONE
         }
     }
+
     private fun initPopular() {
+
         binding.progressBarPopular.visibility = View.VISIBLE
 
         viewModel.loadPopular().observe(this) { list ->
@@ -120,6 +132,7 @@ class MainActivity : AppCompatActivity() {
             allItemsList = list.toMutableList()
         }
     }
+
     private fun initSearch() {
 
         binding.editTextText.addTextChangedListener(object : TextWatcher {
@@ -142,9 +155,12 @@ class MainActivity : AppCompatActivity() {
                 val query = s.toString().lowercase().trim()
 
                 if (query.isEmpty()) {
+
                     binding.recyclerViewPopular.adapter =
                         PopularAdapter(popularList)
+
                 } else {
+
                     val filteredList = allItemsList.filter {
                         it.title.lowercase().contains(query)
                     }.toMutableList()
@@ -158,6 +174,4 @@ class MainActivity : AppCompatActivity() {
             }
         })
     }
-
-
 }

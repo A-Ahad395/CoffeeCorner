@@ -33,19 +33,33 @@ object FavoriteManager {
 
         } else {
 
-            val type = object : TypeToken<ArrayList<ItemsModel>>() {}.type
+            val type =
+                object : TypeToken<ArrayList<ItemsModel>>() {}.type
 
             Gson().fromJson(json, type)
         }
     }
 
-    fun removeFavorite(context: Context, position: Int) {
+    fun removeFavorite(context: Context, title: String) {
 
         val list = getFavorites(context)
 
-        list.removeAt(position)
+        val newList = ArrayList(
+            list.filter {
+                it.title != title
+            }
+        )
 
-        saveFavorites(context, list)
+        saveFavorites(context, newList)
+    }
+
+    fun isFavorite(context: Context, title: String): Boolean {
+
+        val list = getFavorites(context)
+
+        return list.any {
+            it.title == title
+        }
     }
 
     private fun saveFavorites(
