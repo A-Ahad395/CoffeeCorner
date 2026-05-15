@@ -1,76 +1,92 @@
 package com.rahad.coffeecorner.Helper
 
-import android.content.Context
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import com.rahad.coffeecorner.Domain.ItemsModel
 
 object FavoriteManager {
 
-    private const val FAVORITE_KEY = "favorite_items"
-
-    fun addFavorite(context: Context, item: ItemsModel) {
-
-        val list = getFavorites(context)
-
-        if (!list.any { it.title == item.title }) {
-
-            list.add(item)
-
-            saveFavorites(context, list)
-        }
+    private fun getUserId(): String? {
+        return FirebaseAuth.getInstance().currentUser?.uid
     }
 
-    fun getFavorites(context: Context): ArrayList<ItemsModel> {
+    fun addFavorite(item: ItemsModel) {
+        val uid = getUserId() ?: return
 
-        val tinyDB = TinyDB(context)
-
-        val json = tinyDB.getString(FAVORITE_KEY)
-
-        return if (json.isEmpty()) {
-
-            ArrayList()
-
-        } else {
-
-            val type =
-                object : TypeToken<ArrayList<ItemsModel>>() {}.type
-
-            Gson().fromJson(json, type)
-        }
+        FirebaseDatabase.getInstance()
+            .getReference("Users")
+            .child(uid)
+            .child("Favorites")
+            .child(item.title)
+            .setValue(item)
     }
 
-    fun removeFavorite(context: Context, title: String) {
+    fun removeFavorite(title: String) {
+        val uid = getUserId() ?: return
 
-        val list = getFavorites(context)
-
-        val newList = ArrayList(
-            list.filter {
-                it.title != title
-            }
-        )
-
-        saveFavorites(context, newList)
+        FirebaseDatabase.getInstance()
+            .getReference("Users")
+            .child(uid)
+            .child("Favorites")
+            .child(title)
+            .removeValue()
     }
 
-    fun isFavorite(context: Context, title: String): Boolean {
-
-        val list = getFavorites(context)
-
-        return list.any {
-            it.title == title
-        }
-    }
-
-    private fun saveFavorites(
-        context: Context,
-        list: ArrayList<ItemsModel>
+    fun isFavorite(
+        title: String,
+        callback: (Boolean) -> Unit
     ) {
+        val uid = getUserId()
 
-        val tinyDB = TinyDB(context)
+        if (uid == null) {
+            callback(false)
+            return
+        }
 
-        val json = Gson().toJson(list)
+        FirebaseDatabase.getInstance()
+            .getReference("Users")
+            .child(uid)
+            .child("Favorites")
+            .child(title)
+            .get()
+            .addOnSuccessListener { snapshot ->
+                callback(snapshot.exists())
+            }
+            .addOnFailureListener {
+                callback(false)
+            }
+    }
 
-        tinyDB.putString(FAVORITE_KEY, json)
+    fun getFavorites(
+        callback: (ArrayList<ItemsModel>) -> Unit
+    ) {
+        val uid = getUserId()
+
+        if (uid == null) {
+            callback(ArrayList())
+            return
+        }
+
+        FirebaseDatabase.getInstance()
+            .getReference("Users")
+            .child(uid)
+            .child("Favorites")
+            .get()
+            .addOnSuccessListener { snapshot ->
+
+                val list = ArrayList<ItemsModel>()
+
+                for (child in snapshot.children) {
+                    val item = child.getValue(ItemsModel::class.java)
+                    if (item != null) {
+                        list.add(item)
+                    }
+                }
+
+                callback(list)
+            }
+            .addOnFailureListener {
+                callback(ArrayList())
+            }
     }
 }

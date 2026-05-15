@@ -89,19 +89,15 @@ class DetailActivity : AppCompatActivity() {
 
             basePrice = item.price
 
-            isFavorite =
-                FavoriteManager.isFavorite(
-                    this@DetailActivity,
-                    item.title
-                )
+            FavoriteManager.isFavorite(item.title) { favorite ->
 
-            if (isFavorite) {
+                isFavorite = favorite
 
-                favBtn.setImageResource(R.drawable.ic_heart_red)
-
-            } else {
-
-                favBtn.setImageResource(R.drawable.ic_heart_white)
+                if (isFavorite) {
+                    favBtn.setImageResource(R.drawable.ic_heart_red)
+                } else {
+                    favBtn.setImageResource(R.drawable.ic_heart_white)
+                }
             }
 
             if (item.picUrl.isNotEmpty()) {
@@ -123,11 +119,9 @@ class DetailActivity : AppCompatActivity() {
             }
 
             plusCart.setOnClickListener {
-
                 numberOrder++
 
-                minusEachItem.text =
-                    numberOrder.toString()
+                minusEachItem.text = numberOrder.toString()
 
                 updatePrice()
             }
@@ -138,8 +132,7 @@ class DetailActivity : AppCompatActivity() {
 
                     numberOrder--
 
-                    minusEachItem.text =
-                        numberOrder.toString()
+                    minusEachItem.text = numberOrder.toString()
 
                     updatePrice()
                 }
@@ -151,14 +144,9 @@ class DetailActivity : AppCompatActivity() {
 
                 if (isFavorite) {
 
-                    FavoriteManager.addFavorite(
-                        this@DetailActivity,
-                        item
-                    )
+                    FavoriteManager.addFavorite(item)
 
-                    favBtn.setImageResource(
-                        R.drawable.ic_heart_red
-                    )
+                    favBtn.setImageResource(R.drawable.ic_heart_red)
 
                     Toast.makeText(
                         this@DetailActivity,
@@ -168,14 +156,9 @@ class DetailActivity : AppCompatActivity() {
 
                 } else {
 
-                    FavoriteManager.removeFavorite(
-                        this@DetailActivity,
-                        item.title
-                    )
+                    FavoriteManager.removeFavorite(item.title)
 
-                    favBtn.setImageResource(
-                        R.drawable.ic_heart_white
-                    )
+                    favBtn.setImageResource(R.drawable.ic_heart_white)
 
                     Toast.makeText(
                         this@DetailActivity,
@@ -189,8 +172,7 @@ class DetailActivity : AppCompatActivity() {
 
                 item.numberInCart = numberOrder
 
-                item.price =
-                    basePrice * sizeMultiplier
+                item.price = basePrice * sizeMultiplier
 
                 managementCart.insertItems(item)
 
@@ -206,8 +188,7 @@ class DetailActivity : AppCompatActivity() {
 
                 item.numberInCart = numberOrder
 
-                item.price =
-                    basePrice * sizeMultiplier
+                item.price = basePrice * sizeMultiplier
 
                 managementCart.insertItems(item)
 

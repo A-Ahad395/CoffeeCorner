@@ -21,13 +21,17 @@ class FavoriteActivity : AppCompatActivity() {
             finish()
         }
 
-        binding.favoriteView.layoutManager = LinearLayoutManager(this)
+        binding.favoriteView.layoutManager =
+            LinearLayoutManager(this)
     }
 
     override fun onResume() {
         super.onResume()
 
-        binding.favoriteView.adapter =
-            FavoriteAdapter(FavoriteManager.getFavorites(this))
+        FavoriteManager.getFavorites { list ->
+
+            binding.favoriteView.adapter =
+                FavoriteAdapter(list)
+        }
     }
 }

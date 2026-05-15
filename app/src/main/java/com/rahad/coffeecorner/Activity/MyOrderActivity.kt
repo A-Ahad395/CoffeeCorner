@@ -1,10 +1,13 @@
 package com.rahad.coffeecorner.Activity
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import com.rahad.coffeecorner.Adapter.OrderAdapter
-import com.rahad.coffeecorner.Helper.OrderManager
+import com.rahad.coffeecorner.Domain.OrderModel
 import com.rahad.coffeecorner.databinding.ActivityMyOrderBinding
 
 class MyOrderActivity : AppCompatActivity() {
@@ -21,11 +24,49 @@ class MyOrderActivity : AppCompatActivity() {
             finish()
         }
 
-        binding.orderView.layoutManager = LinearLayoutManager(this)
+        binding.orderView.layoutManager =
+            LinearLayoutManager(this)
 
-        val orders = OrderManager.getOrders(this)
-        orders.reverse()
+        loadOrdersFromFirebase()
+    }
 
-        binding.orderView.adapter = OrderAdapter(orders)
+    private fun loadOrdersFromFirebase() {
+
+        val uid = FirebaseAuth.getInstance().currentUser?.uid
+
+        if (uid == null) {
+            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        FirebaseDatabase.getInstance()
+            .getReference("Users")
+            .child(uid)
+            .child("Orders")
+            .get()
+            .addOnSuccessListener { snapshot ->
+
+                val orders = ArrayList<OrderModel>()
+
+                for (child in snapshot.children) {
+                    val order = child.getValue(OrderModel::class.java)
+
+                    if (order != null) {
+                        orders.add(order)
+                    }
+                }
+
+                orders.reverse()
+
+                binding.orderView.adapter =
+                    OrderAdapter(orders)
+            }
+            .addOnFailureListener {
+                Toast.makeText(
+                    this,
+                    "Failed to load orders: ${it.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
     }
 }

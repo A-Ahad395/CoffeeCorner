@@ -90,10 +90,7 @@ class FavoriteAdapter(
 
                 val removedItem = items[pos]
 
-                FavoriteManager.removeFavorite(
-                    holder.itemView.context,
-                    removedItem.title
-                )
+                FavoriteManager.removeFavorite(removedItem.title)
 
                 items.removeAt(pos)
 
