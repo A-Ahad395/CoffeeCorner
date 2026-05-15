@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#120A06">
@@ -9,6 +11,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="24dp">
+
         <LinearLayout
             android:id="@+id/backBtn"
             android:layout_width="wrap_content"
@@ -26,6 +29,7 @@
                 android:textStyle="bold" />
 
         </LinearLayout>
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -43,8 +47,8 @@
             android:layout_marginTop="25dp"
             android:scaleType="centerCrop"
             android:src="@drawable/pp"
-
-            />
+            app:shapeAppearanceOverlay="@style/CircleImageView"
+            app:strokeWidth="0dp" />
 
         <Button
             android:id="@+id/uploadPhotoBtn"

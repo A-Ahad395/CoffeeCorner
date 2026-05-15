@@ -29,7 +29,6 @@ class ManagmentCart(val context: Context) {
             .child("Cart")
             .setValue(list)
             .addOnSuccessListener {
-                Toast.makeText(context, "Cart saved to Firebase", Toast.LENGTH_SHORT).show()
             }
             .addOnFailureListener {
                 Toast.makeText(context, "Cart save failed: ${it.message}", Toast.LENGTH_SHORT).show()

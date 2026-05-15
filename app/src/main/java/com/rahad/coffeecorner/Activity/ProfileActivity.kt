@@ -1,31 +1,31 @@
 package com.rahad.coffeecorner.Activity
 
+import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.storage.FirebaseStorage
 import com.rahad.coffeecorner.databinding.ActivityProfileBinding
+import java.io.File
+import java.io.FileOutputStream
 
 class ProfileActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityProfileBinding
     private lateinit var auth: FirebaseAuth
     private lateinit var database: FirebaseDatabase
-    private lateinit var storage: FirebaseStorage
-    private var imageUri: Uri? = null
 
     private val imagePicker =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             if (uri != null) {
-                imageUri = uri
                 binding.profileImage.setImageURI(uri)
-                uploadProfileImage()
+                saveImageToInternalStorage(uri)
             }
         }
 
@@ -36,9 +36,12 @@ class ProfileActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         auth = FirebaseAuth.getInstance()
-        database = FirebaseDatabase.getInstance("https://coffeecornerrahad-default-rtdb.firebaseio.com/")
-        storage = FirebaseStorage.getInstance("gs://coffeecornerrahad.firebasestorage.app")
 
+        database = FirebaseDatabase.getInstance(
+            "https://coffeecornerrahad-default-rtdb.firebaseio.com/"
+        )
+
+        loadLocalProfileImage()
         loadUserData()
         setListeners()
     }
@@ -53,15 +56,11 @@ class ProfileActivity : AppCompatActivity() {
             .child(uid)
             .get()
             .addOnSuccessListener { snapshot ->
+
                 val name = snapshot.child("name").value.toString()
-                val profileImage = snapshot.child("profileImage").value.toString()
 
-                binding.nameEdt.setText(name)
-
-                if (profileImage.isNotEmpty()) {
-                    Glide.with(this)
-                        .load(profileImage)
-                        .into(binding.profileImage)
+                if (name != "null") {
+                    binding.nameEdt.setText(name)
                 }
             }
     }
@@ -69,6 +68,10 @@ class ProfileActivity : AppCompatActivity() {
     private fun setListeners() {
 
         binding.uploadPhotoBtn.setOnClickListener {
+            imagePicker.launch("image/*")
+        }
+
+        binding.profileImage.setOnClickListener {
             imagePicker.launch("image/*")
         }
 
@@ -89,8 +92,8 @@ class ProfileActivity : AppCompatActivity() {
                     Toast.makeText(this, "Name updated", Toast.LENGTH_SHORT).show()
                 }
         }
-        binding.backBtn.setOnClickListener {
 
+        binding.backBtn.setOnClickListener {
             startActivity(Intent(this, MainActivity::class.java))
             finish()
         }
@@ -121,30 +124,58 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
+    private fun saveImageToInternalStorage(uri: Uri) {
+        try {
+            val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri)
 
-    private fun uploadProfileImage() {
-        val user = auth.currentUser ?: return
-        val uri = imageUri ?: return
+            val folder = File(filesDir, "profile")
 
-        val imageRef = storage.reference
-            .child("ProfileImages")
-            .child("${user.uid}.jpg")
-
-        imageRef.putFile(uri)
-            .addOnSuccessListener {
-                imageRef.downloadUrl.addOnSuccessListener { downloadUrl ->
-
-                    database.getReference("Users")
-                        .child(user.uid)
-                        .child("profileImage")
-                        .setValue(downloadUrl.toString())
-                        .addOnSuccessListener {
-                            Toast.makeText(this, "Profile photo updated", Toast.LENGTH_SHORT).show()
-                        }
-                }
+            if (!folder.exists()) {
+                folder.mkdirs()
             }
-            .addOnFailureListener {
-                Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
+
+            val file = File(folder, "profile.jpg")
+            val outputStream = FileOutputStream(file)
+
+            bitmap.compress(
+                android.graphics.Bitmap.CompressFormat.JPEG,
+                100,
+                outputStream
+            )
+
+            outputStream.close()
+
+            val prefs = getSharedPreferences(
+                "profile_prefs",
+                Context.MODE_PRIVATE
+            )
+
+            prefs.edit()
+                .putString("profile_path", file.absolutePath)
+                .apply()
+
+            Toast.makeText(this, "Photo saved", Toast.LENGTH_SHORT).show()
+
+        } catch (e: Exception) {
+            Toast.makeText(this, e.message, Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun loadLocalProfileImage() {
+        val prefs = getSharedPreferences(
+            "profile_prefs",
+            Context.MODE_PRIVATE
+        )
+
+        val path = prefs.getString("profile_path", null)
+
+        if (path != null) {
+            val file = File(path)
+
+            if (file.exists()) {
+                val bitmap = BitmapFactory.decodeFile(file.absolutePath)
+                binding.profileImage.setImageBitmap(bitmap)
             }
+        }
     }
 }
